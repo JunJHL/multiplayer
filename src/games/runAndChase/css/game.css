@@ -1,0 +1,53 @@
+.container{
+    display: flex;
+  }
+  
+  .board{
+    position: relative;
+  
+    margin: 5rem auto;
+    border: 2px solid skyblue;
+    width: 50rem;
+    height: 35rem;
+  }
+  
+  .char1{
+    position: relative;
+    background-color: black;
+    width: 1rem;
+    height: 1rem;
+  } 
+  
+  .char2{
+    position: relative;
+    background-color: gray;
+    width: 1rem;
+    height: 1rem;
+  }  
+
+  .char{
+    position: relative;
+    width: 1rem;
+    height: 1rem;
+  }  
+  
+  .chatBox{
+    position: relative;
+    margin-top: 5rem;
+    left: -10%;
+  }
+  .timerBoard{
+    text-align: center;
+    position: relative;
+    margin-bottom: 5rem;
+    border: 1px solid black;
+    border-radius: 50%;
+    width: 12rem;
+    height: 12rem;
+  }
+  
+  .timeText{
+    position: relative;
+    top: 30%;
+  }
+

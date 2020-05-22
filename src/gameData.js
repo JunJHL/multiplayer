@@ -13,6 +13,7 @@ import TwentyOneQuestions from './games/twentyOneQuestions/TwentyOneQuestions.js
 import burst_Forth from "./games/Burst_Forth/burstForth.js";
 import fight from "./games/fight/fight.js";
 import uno from './games/uno/uno.js';
+import RunAndChase from './games/runAndChase/RunAndChase.js';
 
 const gameData = {
 
@@ -23,6 +24,15 @@ const gameData = {
     minUsers: 1,
     maxUsers: 10,
     component: ChatRoom,
+  },
+
+  run_and_chase: {
+    title: "Run and Chase",
+    authors: "Jesse L",
+    description: "Enjoy chasing or being chased",
+      minUsers: 2,
+      maxUsers: 2,
+      component: RunAndChase
   },
 
   tictactoe: {
