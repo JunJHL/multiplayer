@@ -18,7 +18,7 @@ export default class RunAndChase extends GameComponent {
   constructor(props) {
     super(props);
     this.state = {
-      cliked : false,
+      clicked : false,
       creatorCharacterX: 0,
       creatorCharacterY: 0,
       creatorCharacterColor: "black",
@@ -33,6 +33,8 @@ export default class RunAndChase extends GameComponent {
 
   sendFirebaseData() {
     var databaseState = {
+      win: this.state.win,
+      clicked: this.state.clicked,
       creatorCharacterX: this.state.creatorCharacterX,
       creatorCharacterY: this.state.creatorCharacterY,
       creatorCharacterColor: this.state.creatorCharacterColor,
@@ -52,6 +54,8 @@ export default class RunAndChase extends GameComponent {
   
   onSessionDataChanged(data) {
       this.setState({
+        win: data.win,
+        clicked: data.clicked,
         creatorCharacterX: data.creatorCharacterX,
         creatorCharacterY: data.creatorCharacterY,
         creatorCharacterColor: data.creatorCharacterColor,
@@ -122,11 +126,11 @@ export default class RunAndChase extends GameComponent {
             })
           }
           
-          this.sendFirebaseData();
           this.setState({
             min: 1,
             sec: 0
           })
+          this.sendFirebaseData();
         } else {
           this.setState({
             min: this.state.min - 1,
@@ -141,58 +145,54 @@ export default class RunAndChase extends GameComponent {
   handleClick = () => {
     this.myInterval();
     this.setState({
-      cliked : true
+      clicked : true
     });
-   this.sendFirebaseData();
+    this.sendFirebaseData(); 
   }
 
-  resetGame = () => {
-    this.setState({
-      min: 1,
-      sec: 0,
-      creatorCharacterX: 0,
-      creatorCharacterY: 0,
-      creatorCharacterColor: "white",
-      otherCharacterX: 12,
-      otherCharacterY: 12,
-      otherCharacterColor: "black"
-    });
-    this.sendFirebaseData();
-  }
+  // resetGame = () => {
+  //   this.setState({
+  //     min: 1,
+  //     sec: 0,
+  //     creatorCharacterX: 0,
+  //     creatorCharacterY: 0,
+  //     creatorCharacterColor: "white",
+  //     otherCharacterX: 12,
+  //     otherCharacterY: 12,
+  //     otherCharacterColor: "black"
+  //   });
+  //   this.sendFirebaseData();
+  // }
 
   onKeyDown = (e) => {
       e = e || window.event;
       console.log(e.keyCode);
     
       if(this.getSessionCreatorUserId() === this.getMyUserId()){
-        this.setState({
-          currentUserColor: "black"
-        });
-        
         switch(e.keyCode) {
           case 87: //W
-            if(this.state.creatorCharacterY > 0 && this.state.cliked === true) {
+            if(this.state.creatorCharacterY > 0 && this.state.clicked === true) {
               this.setState ({creatorCharacterY : this.state.creatorCharacterY-1});
               this.sendFirebaseData();
               this.isTouching();
             }
               break;
           case 83: //S
-            if(this.state.creatorCharacterY < 34 && this.state.cliked === true) {
+            if(this.state.creatorCharacterY < 34 && this.state.clicked === true) {
               this.setState ({creatorCharacterY: this.state.creatorCharacterY+1});
               this.sendFirebaseData();
               this.isTouching();
             }
               break;
           case 65: //A
-            if(this.state.creatorCharacterX > 0 && this.state.cliked === true) {
+            if(this.state.creatorCharacterX > 0 && this.state.clicked === true) {
               this.setState ({creatorCharacterX: this.state.creatorCharacterX-1});
               this.sendFirebaseData();
               this.isTouching();
             }
               break;
           case 68: //D
-            if(this.state.creatorCharacterX < 49 && this.state.cliked === true) {
+            if(this.state.creatorCharacterX < 49 && this.state.clicked === true) {
               this.setState ({creatorCharacterX: this.state.creatorCharacterX+1});
               this.sendFirebaseData();
               this.isTouching();
@@ -200,33 +200,30 @@ export default class RunAndChase extends GameComponent {
               break;
           }
       }else{
-        this.setState({
-          currentUserColor: "white"
-        });
         switch(e.keyCode) {
           case 87: //W
-            if(this.state.otherCharacterY > -1 && this.state.cliked === true) {
+            if(this.state.otherCharacterY > -1 && this.state.clicked === true) {
               this.setState ({otherCharacterY : this.state.otherCharacterY-1});
               this.sendFirebaseData();
               this.isTouching();
             }
               break;
           case 83: //S
-            if(this.state.otherCharacterY < 49 && this.state.cliked === true) {
+            if(this.state.otherCharacterY < 49 && this.state.clicked === true) {
               this.setState ({otherCharacterY: this.state.otherCharacterY+1});
               this.sendFirebaseData();
               this.isTouching();
             }
               break;
           case 65: //A
-            if(this.state.otherCharacterX > 0 && this.state.cliked === true) {
+            if(this.state.otherCharacterX > 0 && this.state.clicked === true) {
               this.setState ({otherCharacterX: this.state.otherCharacterX-1});
               this.sendFirebaseData();
               this.isTouching();
             }
               break;
           case 68: //D
-            if(this.state.otherCharacterX < 49 && this.state.cliked === true) {
+            if(this.state.otherCharacterX < 49 && this.state.clicked === true) {
               this.setState ({otherCharacterX: this.state.otherCharacterX+1});
               this.sendFirebaseData();
               this.isTouching();
@@ -239,15 +236,12 @@ export default class RunAndChase extends GameComponent {
 
     isTouching() {
       if(this.state.creatorCharacterX === this.state.otherCharacterX && this.state.creatorCharacterY-1 === this.state.otherCharacterY) {
-        this.setState({
-          min: 0,
-          sec: 0,
-        })
-        this.sendFirebaseData();
         if(this.state.currentUserColor === "black") {
           this.setState({
             win: true
           });
+          alert("You win");
+          this.sendFirebaseData();
         }
       }
     }
@@ -264,10 +258,10 @@ export default class RunAndChase extends GameComponent {
         
         <div className="chatBox">
           <Timer min={this.state.min} sec={this.state.sec}/>
-          {this.state.cliked === false ? 
-          <button className="start" onClick={this.handleClick}> Start Game </button> : null }
-          {this.state.min === 0 && this.state.sec === 0 && this.state.cliked === true ? 
-          <button className="restart" onClick={this.resetGame}> Restart Game </button> : null }
+          {this.state.clicked === false ? 
+          (<button className="start" onClick={this.handleClick}> Start Game </button>) : null }
+          {/* {this.state.min === 0 && this.state.sec === 0 && this.state.clicked === true ? 
+          <button className="restart" onClick={this.resetGame}> Restart Game </button> : null } */}
         </div>
       </div>
     );
