@@ -17,7 +17,8 @@ export default class RunAndChase extends GameComponent {
   constructor(props) {
     super(props);
     this.state = {
-      cliked : false,
+      win: false,
+      clicked: false,
       creatorCharacterX: 0,
       creatorCharacterY: 0,
       creatorCharacterColor: "black",
@@ -31,6 +32,7 @@ export default class RunAndChase extends GameComponent {
 
   sendFirebaseData() {
     var databaseState = {
+      win: this.state.win,
       creatorCharacterX: this.state.creatorCharacterX,
       creatorCharacterY: this.state.creatorCharacterY,
       creatorCharacterColor: this.state.creatorCharacterColor,
@@ -50,6 +52,7 @@ export default class RunAndChase extends GameComponent {
   
   onSessionDataChanged(data) {
       this.setState({
+        win: data.win,
         creatorCharacterX: data.creatorCharacterX,
         creatorCharacterY: data.creatorCharacterY,
         creatorCharacterColor: data.creatorCharacterColor,
@@ -98,8 +101,6 @@ export default class RunAndChase extends GameComponent {
       if (this.state.sec === 0) {
         if (this.state.min === 0) {
           clearInterval(this.myInterval);
-          this.sendFirebaseData();
-          alert("Runner Win");
         } else {
           this.setState({
             min: this.state.min - 1,
@@ -107,13 +108,12 @@ export default class RunAndChase extends GameComponent {
           });
           this.sendFirebaseData();
         }
-      }
+      } 
     }, 1000);
-    this.setState({
-      cliked : true
-    });
+      this.setState({
+        clicked : true
+      });
   }
-
 
   onKeyDown = (e) => {
       e = e || window.event;
@@ -122,28 +122,28 @@ export default class RunAndChase extends GameComponent {
       if(this.getSessionCreatorUserId() === this.getMyUserId()){
         switch(e.keyCode) {
           case 87: //W
-            if(this.state.creatorCharacterY > 0 && this.state.cliked === true) {
+            if(this.state.creatorCharacterY > 0) {
               this.setState ({creatorCharacterY : this.state.creatorCharacterY-1});
               this.sendFirebaseData();
               this.isTouching();
             }
               break;
           case 83: //S
-            if(this.state.creatorCharacterY < 34 && this.state.cliked === true) {
+            if(this.state.creatorCharacterY < 34) {
               this.setState ({creatorCharacterY: this.state.creatorCharacterY+1});
               this.sendFirebaseData();
               this.isTouching();
             }
               break;
           case 65: //A
-            if(this.state.creatorCharacterX > 0 && this.state.cliked === true) {
+            if(this.state.creatorCharacterX > 0) {
               this.setState ({creatorCharacterX: this.state.creatorCharacterX-1});
               this.sendFirebaseData();
               this.isTouching();
             }
               break;
           case 68: //D
-            if(this.state.creatorCharacterX < 49 && this.state.cliked === true) {
+            if(this.state.creatorCharacterX < 49) {
               this.setState ({creatorCharacterX: this.state.creatorCharacterX+1});
               this.sendFirebaseData();
               this.isTouching();
@@ -153,28 +153,28 @@ export default class RunAndChase extends GameComponent {
       }else{
         switch(e.keyCode) {
           case 87: //W
-            if(this.state.otherCharacterY > -1 && this.state.cliked === true) {
+            if(this.state.otherCharacterY > -1) {
               this.setState ({otherCharacterY : this.state.otherCharacterY-1});
               this.sendFirebaseData();
               this.isTouching();
             }
               break;
           case 83: //S
-            if(this.state.otherCharacterY < 49 && this.state.cliked === true) {
+            if(this.state.otherCharacterY < 49) {
               this.setState ({otherCharacterY: this.state.otherCharacterY+1});
               this.sendFirebaseData();
               this.isTouching();
             }
               break;
           case 65: //A
-            if(this.state.otherCharacterX > 0 && this.state.cliked === true) {
+            if(this.state.otherCharacterX > 0) {
               this.setState ({otherCharacterX: this.state.otherCharacterX-1});
               this.sendFirebaseData();
               this.isTouching();
             }
               break;
           case 68: //D
-            if(this.state.otherCharacterX < 49 && this.state.cliked === true) {
+            if(this.state.otherCharacterX < 49) {
               this.setState ({otherCharacterX: this.state.otherCharacterX+1});
               this.sendFirebaseData();
               this.isTouching();
@@ -188,12 +188,14 @@ export default class RunAndChase extends GameComponent {
     isTouching() {
       if(this.state.creatorCharacterX === this.state.otherCharacterX && this.state.creatorCharacterY-1 === this.state.otherCharacterY) {
         this.setState({
-          min: 0,
-          sec: 0,
-        });
+          win : true
+        })
         this.sendFirebaseData();
-       alert("Chaser Win");
+        alert("Chaser Win");
       }
+      if(this.state.min === 0 && this.state.sec === 0 && this.state.win !== true) {
+        alert("Runner Win");
+      } 
     }
  
   
@@ -201,13 +203,17 @@ export default class RunAndChase extends GameComponent {
     return (
       <div className="container">
         <div className="board">
-          <Character playerXCoor={this.state.creatorCharacterX} playerYCoor={this.state.creatorCharacterY} color={this.state.creatorCharacterColor}/>
-          <Character playerXCoor={this.state.otherCharacterX} playerYCoor={this.state.otherCharacterY} color={this.state.otherCharacterColor}/>
+          {this.state.win === false ?
+          <div>
+            <Character playerXCoor={this.state.creatorCharacterX} playerYCoor={this.state.creatorCharacterY} color={this.state.creatorCharacterColor}/>
+            <Character playerXCoor={this.state.otherCharacterX} playerYCoor={this.state.otherCharacterY} color={this.state.otherCharacterColor}/>
+          </div>
+            : null}
         </div>
         
         <div className="chatBox">
           <Timer min={this.state.min} sec={this.state.sec}/>
-          {this.state.cliked === false ? 
+          {this.state.clicked === false ? 
           <button className="start" onClick={this.myInterval}> Start Game </button> : null }
         </div>
       </div>
