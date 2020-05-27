@@ -22,8 +22,8 @@ export default class RunAndChase extends GameComponent {
       creatorCharacterX: 0,
       creatorCharacterY: 0,
       creatorCharacterColor: "black",
-      otherCharacterX: 12,
-      otherCharacterY: 12,
+      otherCharacterX: 49,
+      otherCharacterY: 33,
       otherCharacterColor: "white",
       min: 1,
       sec: 0,
@@ -160,7 +160,7 @@ export default class RunAndChase extends GameComponent {
             }
               break;
           case 83: //S
-            if(this.state.otherCharacterY < 49) {
+            if(this.state.otherCharacterY < 34) {
               this.setState ({otherCharacterY: this.state.otherCharacterY+1});
               this.sendFirebaseData();
               this.isTouching();

@@ -4,9 +4,8 @@
   
   .board{
     position: relative;
-    background-color: gray;
+    background-image: linear-gradient(to right,pink ,skyblue);
     margin: 5rem auto;
-    border: 2px solid black;
     width: 50rem;
     height: 35rem;
   }
@@ -22,11 +21,23 @@
     margin-top: 5rem;
     left: -10%;
   }
+
+  .start{
+    position: relative;
+    left: 4rem;
+    color: white;
+    width: 5rem;
+    height: 2rem;
+    text-decoration-style: bold;
+    background-image: linear-gradient(to right,black,gray);
+  }
+
   .timerBoard{
     text-align: center;
     position: relative;
     margin-bottom: 5rem;
-    border: 1px solid black;
+    border: 1px solid white;
+    background-image: linear-gradient(to right,skyblue ,pink);
     border-radius: 50%;
     width: 12rem;
     height: 12rem;
@@ -35,5 +46,6 @@
   .timeText{
     position: relative;
     top: 30%;
+    color: white
   }
 
